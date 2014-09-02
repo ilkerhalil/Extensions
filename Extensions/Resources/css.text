@@ -1,0 +1,30 @@
+﻿table{
+				border-width:1px;
+				text-align:center;
+				border-color:#a9c6c9;
+				border-collapse:collapse;
+				border-style:solid;
+				background-color:#d4e3e5;
+				font-family:Verdana,Geneva,sans-serif;
+				font-size:11px;
+				color:teal
+}
+table th {
+				background-color:#c3dde0;
+				border-width: 1px;
+				padding: 5px;
+				border-style: solid;
+				border-color: #a9c6c9;
+}
+table tr {
+				background-color:#d4e3e5;
+}
+table td {
+				border-width: 1px;
+				padding: 3px;
+				border-style: solid;
+				border-color: #a9c6c9;
+				text-align:center;
+				color:teal;
+				
+}
