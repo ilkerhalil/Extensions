@@ -10,7 +10,7 @@ namespace Extensions
         }
         public static int GetRandomNumber(this int a)
         {
-            Random rnd = new Random(a);
+            var rnd = new Random(a);
             return rnd.Next(1, 100000);
         }
     }

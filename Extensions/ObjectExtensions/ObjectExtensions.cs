@@ -11,17 +11,17 @@ namespace Extensions.ObjectExtensions
     {
         public static string ToXmlSerialize(this object o)
         {
-            StringWriter sw = new StringWriter();
-            XmlSerializer serializer = new XmlSerializer(o.GetType());
+            var sw = new StringWriter();
+            var serializer = new XmlSerializer(o.GetType());
             serializer.Serialize(sw, o);
             return sw.ToString();
         }
         public static XElement ToXElementSerialize(this object o)
         {
-            XmlSerializer xs = new XmlSerializer(o.GetType());
-            XDocument d = new XDocument();
-            using (XmlWriter w = d.CreateWriter()) xs.Serialize(w, o);
-            XElement e = d.Root;
+            var xs = new XmlSerializer(o.GetType());
+            var d = new XDocument();
+            using (var w = d.CreateWriter()) xs.Serialize(w, o);
+            var e = d.Root;
             e.Remove();
             return e;
         }
@@ -79,7 +79,7 @@ namespace Extensions.ObjectExtensions
                         sb.Append(value);
                     }
                 }
-                sb.Append(System.Environment.NewLine);
+                sb.Append(Environment.NewLine);
             }
             return sb.ToString();
         }
