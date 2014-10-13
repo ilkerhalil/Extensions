@@ -20,7 +20,7 @@ namespace Extensions.IEnumerableExtensions
         //public static Stream ToExcel(this IEnumerable<dynamic> collection, string sheetName = "Sheet1")
         //{
         //    var ms = new MemoryStream();
-           
+
         //    return ms;
 
         //}
@@ -41,26 +41,11 @@ namespace Extensions.IEnumerableExtensions
 
         public static Stream ToExcel<T>(this IEnumerable<T> collection)
         {
-
-            //var fs = File.Create("tmpXlsFile");
-            //var dataTable = collection.ToDataTable();
-            //using (var wb = new XLWorkbook(fs, XLEventTracking.Disabled))
-            //{
-            //    wb.Worksheets.Add(dataTable);
-            //    wb.Save();
-            //}
-            //return fs;
             var fs = new MemoryStream();
             var package = new ExcelPackage(fs);
             var sheet = package.Workbook.Worksheets.Add("Sheet1");
             sheet.Cells.LoadFromCollection(collection, true, TableStyles.Dark1);
             package.Save();
-            //using (var wb = new XLWorkbook(XLEventTracking.Disabled))
-            //{
-            //    wb.Worksheets.Add(dataTable, sheetName);
-            //    wb.SaveAs(fs);
-            //}
-            //fs.Seek(0, SeekOrigin.Begin);
             return fs;
 
         }
@@ -127,20 +112,15 @@ namespace Extensions.IEnumerableExtensions
         public static string ToVerticalHtmlTable<T>(this IEnumerable<T> collection, string hrefIdColumnName = "", string hrefParam = "", string[] headerColumn = null, bool isFooter = false, params string[] style)
         {
 
-            StringBuilder sr = new StringBuilder();
-            var collectionArray = collection.ToArray();
-            if (style.Count() > 0)
+            var sr = new StringBuilder();
+            if (style.Any())
             {
                 sr.AppendLine("<style type='text/css'>");
-                style.ToList().ForEach(str =>
-                {
-                    sr.AppendLine(str);
-                });
+                style.ToList().ForEach(str => sr.AppendLine(str));
                 sr.AppendLine("</style>");
             }
-            else if (style.Count() == 0)
+            else if (!style.Any())
             {
-                var css = Resources.css;
                 sr.AppendLine("<style type='text/css'>");
                 sr.AppendLine(string.Empty);
                 sr.AppendLine("</style>");
@@ -148,14 +128,11 @@ namespace Extensions.IEnumerableExtensions
             sr.AppendLine("<table>");
             if (headerColumn != null)
             {
-                if (headerColumn.Count() > 0)
+                if (headerColumn.Any())
                 {
                     sr.AppendLine("<thead>");
                     sr.AppendLine("<tr>");
-                    headerColumn.ToList().ForEach(f =>
-                        {
-                            sr.AppendLine(string.Format("<th>{0}</th>", f));
-                        });
+                    headerColumn.ToList().ForEach(f => sr.AppendLine(string.Format("<th>{0}</th>", f)));
                     sr.AppendLine("</tr>");
                     sr.AppendLine("</thead>");
                 }
@@ -163,22 +140,20 @@ namespace Extensions.IEnumerableExtensions
             }
             sr.AppendLine("<tbody>");
             Type elementType = typeof(T);
-            var array = collection.ToArray();
-            //int i = 0;
+            var enumerable = collection as T[] ?? collection.ToArray();
+            var array = enumerable.ToArray();
             foreach (var item in elementType.GetProperties())
             {
 
                 sr.AppendLine("<tr id='header'>");
-                Type ColType = Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType;
                 sr.AppendLine(string.Format("<td>{0}</td>", item.Name));
-                List<object> values = new List<object>();
                 array.ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
                     .ForEach(f =>
                      {
-                         object value = f.GetValue(ar, null) ?? string.Empty;
+                         var value = f.GetValue(ar, null) ?? string.Empty;
                          if (f.Name == hrefIdColumnName)
                          {
-                             string a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
+                             var a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
                              sr.AppendLine(string.Format("<td>{0}</td>", a));
                              return;
                          }
@@ -191,7 +166,7 @@ namespace Extensions.IEnumerableExtensions
 
             if (isFooter)
             {
-                var footer = string.Format("<tfoot><tr><td>Total:<b> {0} Items </b></td></tr></tfoot>", collection.Count());
+                var footer = string.Format("<tfoot><tr><td>Total:<b> {0} Items </b></td></tr></tfoot>", enumerable.Count());
                 sr.AppendLine(footer);
             }
             sr.AppendLine("</tbody>");
@@ -226,50 +201,46 @@ namespace Extensions.IEnumerableExtensions
 
         public static string Compare2ToVerticalHtmlTable<T>(this IEnumerable<T> collection, string hrefIdColumnName = "", string hrefParam = "", string[] headerColumn = null, bool isFooter = false, string dateFormat = "d MMMM yyyy", params string[] style)
         {
-            StringBuilder sr = new StringBuilder();
-            var collectionArray = collection.ToArray();
+            var sr = new StringBuilder();
+            //var collectionArray = collection.ToArray();
             sr.AppendLine();
             sr.AppendLine("<style type='text/css'>");
             string css;
-             
+
             css = style.Length > 0 ? css = string.Join("", style) : css = Resources.css;
             sr.AppendLine(css);
             sr.AppendLine("</style>");
             sr.AppendLine("<table>");
             if (headerColumn != null)
             {
-                if (headerColumn.Count() > 0)
+                if (headerColumn.Any())
                 {
                     sr.AppendLine("<thead>");
                     sr.AppendLine("<tr>");
-                    headerColumn.ToList().ForEach(f =>
-                    {
-                        sr.AppendLine(string.Format("<th>{0}</th>", f));
-                    });
+                    headerColumn.ToList().ForEach(f => sr.AppendLine(string.Format("<th>{0}</th>", f)));
                     sr.AppendLine("</tr>");
                     sr.AppendLine("</thead>");
                 }
 
             }
             sr.AppendLine("<tbody>");
-            Type elementType = typeof(T);
-            var array = collection.ToArray();
-            int iRowOdd = 0;
+            var elementType = typeof(T);
+            var enumerable = collection as T[] ?? collection.ToArray();
+            var array = enumerable;
+            var iRowOdd = 0;
             foreach (var item in elementType.GetProperties())
             {
                 iRowOdd = iRowOdd + 1;
                 sr.AppendLine(string.Format("<tr id=\"R{0} \">", (iRowOdd % 2 == 0) ? "0" : "1"));
-                Type ColType = Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType;
                 sr.AppendLine(string.Format("<td><span>{0}</span></td>", item.Name));
-                List<object> values = new List<object>();
                 array.Take(2).ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
                     .ForEach(f =>
                     {
-                        object value = f.GetValue(ar, null) ?? string.Empty;
+                        var value = f.GetValue(ar, null) ?? string.Empty;
                         if (f.Name == hrefIdColumnName)
                         {
 
-                            string a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
+                            var a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
                             sr.AppendLine(string.Format("<td><span>{0}</span></td>", a));
                             return;
                         }
@@ -287,11 +258,10 @@ namespace Extensions.IEnumerableExtensions
                 sr.AppendLine((v1.Equals(v2)) ? "<td><span style=\"color:green;font-size:20px\">&#10003</span></td>" : "<td><span style=\"color:red;font-size:20px\">!!!</span></td>");
 
                 sr.AppendLine("</tr>");
-                //sr.AppendLine("<tr id='column'>");
             }
             if (isFooter)
             {
-                var footer = string.Format("<tfoot><tr><td>Total:<b> {0} Items </b></td></tr></tfoot>", collection.Count());
+                var footer = string.Format("<tfoot><tr><td>Total:<b> {0} Items </b></td></tr></tfoot>", enumerable.Count());
                 sr.AppendLine(footer);
             }
             sr.AppendLine("</tbody>");
