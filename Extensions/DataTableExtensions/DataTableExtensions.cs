@@ -30,18 +30,15 @@
         public static DataTable ToDataTable<T>(this IEnumerable<T> items)
         {
             var tb = new DataTable(typeof(T).Name);
-
             var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
             foreach (var prop in props)
             {
                 var t = GetCoreType(prop.PropertyType);
                 tb.Columns.Add(prop.Name, t);
             }
-            foreach (T item in items)
+            foreach (var item in items)
             {
                 var values = new object[props.Length];
-
                 for (var i = 0; i < props.Length; i++)
                 {
                     values[i] = props[i].GetValue(item, null);
@@ -88,16 +85,14 @@
             return dt;
         }
 
-        public static Stream ToExcel(this DataTable dataTable, string sheetName = "Sheet1")
+        public static Stream ToExcel(this DataTable dataTable, string sheetName = "Sheet1", TableStyles tableStyle= TableStyles.Medium28)
         {
             var fs = new MemoryStream();
             var package = new ExcelPackage(fs);
             var sheet = package.Workbook.Worksheets.Add(sheetName);
-            if (dataTable != null && (dataTable.Rows != null && dataTable.Rows.Count > 0)) { sheet.Cells.LoadFromDataTable(dataTable, true, TableStyles.Medium28); }
+            if (dataTable != null && (dataTable.Rows != null && dataTable.Rows.Count > 0)) { sheet.Cells.LoadFromDataTable(dataTable, true, tableStyle); }
             else sheet.Cells["A2"].Value = "Gösterilecek data yok..!";
-
             sheet.Column(1).AutoFit();
-
             package.Save();
             return fs;
         }

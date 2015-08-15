@@ -39,21 +39,18 @@ namespace Extensions.IEnumerableExtensions
             wb.SaveAs(savePath);
         }
 
-        public static Stream ToExcel<T>(this IEnumerable<T> collection)
+        public static Stream ToExcel<T>(this IEnumerable<T> collection,string sheetName = "Sheet1", TableStyles tableStyle= TableStyles.Dark1)
         {
             var fs = new MemoryStream();
             var package = new ExcelPackage(fs);
-            var sheet = package.Workbook.Worksheets.Add("Sheet1");
-            sheet.Cells.LoadFromCollection(collection, true, TableStyles.Dark1);
+            var sheet = package.Workbook.Worksheets.Add(sheetName);
+            sheet.Cells.LoadFromCollection(collection, true, tableStyle);
             package.Save();
             return fs;
 
         }
         public static string ToString<T>(this IEnumerable<T> collection,
-      Func<T, string> stringElement, string separator)
-        {
-            return ToString(collection, t => t.ToString(), separator);
-        }
+      Func<T, string> stringElement, string separator) => ToString(collection, t => t.ToString(), separator);
 
         public static string ToHtmlTable<T>(this IEnumerable<T> collection, params string[] style)
         {
@@ -61,7 +58,10 @@ namespace Extensions.IEnumerableExtensions
         }
         public static string ToHtmlTable<T>(this IEnumerable<T> collection, string hrefIdColumnName, string hrefParam, bool visibleFooter, params string[] style)
         {
-            StringBuilder sr = new StringBuilder();
+
+
+
+            var sr = new StringBuilder();
             sr.AppendLine("<style type='text/css'>");
             style.ToList().ForEach(str =>
             {
@@ -71,37 +71,35 @@ namespace Extensions.IEnumerableExtensions
             sr.AppendLine("<table cellspacing=\"3\" cellpadding=\"3\" border=\"1\" align=\"left\" style=\"{0}\">");
             sr.AppendLine("<thead>");
             sr.AppendLine("<tr>");
-            Type elementType = typeof(T);
-            foreach (var item in elementType.GetProperties())
+            var elementType = typeof(T);
+            foreach (var item in from item in elementType.GetProperties() let colType = Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType select item)
             {
-                Type ColType = Nullable.GetUnderlyingType(item.PropertyType) ?? item.PropertyType;
-                sr.AppendLine(string.Format("<th>{0}</th>", item.Name));
+                sr.AppendLine($"<th>{item.Name}</th>");
             }
             sr.AppendLine("</tr>");
             sr.AppendLine("</thead>");
             sr.AppendLine("<tbody>");
             foreach (var item in collection)
             {
-                var rowNumber = 0;
-                sr.AppendLine(string.Format("<tr class=\"{0}\">", rowNumber % 2 == 0 ? "R1" : "R2"));
+                const int rowNumber = 0;
+                sr.AppendLine($"<tr class=\"{(rowNumber%2 == 0 ? "R1" : "R2")}\">");
                 var properties = item.GetType().GetProperties();
-                foreach (PropertyInfo property in properties)
+                foreach (var property in properties)
                 {
-                    object value = property.GetValue(item, null) ?? string.Empty;
+                    var value = property.GetValue(item, null) ?? string.Empty;
                     if (property.Name == hrefIdColumnName)
                     {
-                        string a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
-                        sr.AppendLine(string.Format("<td>{0}</td>", a));
+                        var a = string.Format("<a href='{1}{0}'>{0}</a>", value, hrefParam);
+                        sr.AppendLine($"<td>{a}</td>");
                         continue;
                     }
-                    sr.AppendLine(string.Format("<td>{0}</td>", value));
+                    sr.AppendLine($"<td>{value}</td>");
                 }
                 sr.AppendLine("</tr>");
-                rowNumber++;
             }
             if (visibleFooter)
             {
-                var footer = string.Format("<tfoot><tr>Total:<b> {0} Items </b></tr></tfoot>", collection.Count());
+                var footer = $"<tfoot><tr>Total:<b> {collection.Count()} Items </b></tr></tfoot>";
                 sr.AppendLine(footer);
             }
             sr.AppendLine("</tbody>");
@@ -166,7 +164,7 @@ namespace Extensions.IEnumerableExtensions
 
             if (isFooter)
             {
-                var footer = string.Format("<tfoot><tr><td>Total:<b> {0} Items </b></td></tr></tfoot>", enumerable.Count());
+                var footer = $"<tfoot><tr><td>Total:<b> {enumerable.Count()} Items </b></td></tr></tfoot>";
                 sr.AppendLine(footer);
             }
             sr.AppendLine("</tbody>");
@@ -274,7 +272,7 @@ namespace Extensions.IEnumerableExtensions
 
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> list, int parts)
         {
-            int i = 0;
+            var i = 0;
             var splits = from item in list
                          group item by i++ % parts into part
                          select part.AsEnumerable();

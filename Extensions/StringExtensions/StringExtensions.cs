@@ -7,16 +7,11 @@ namespace Extensions.StringExtensions
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Net.Security;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml.Linq;
-    using Extensions.Properties;
-    using LBTSms.Interfaces;
-    using Newtonsoft.Json;
+    using Properties;
     using PoorMansTSqlFormatterLib;
-    using RestSharp;
     using System.Globalization;
     using System.Threading;
     using System.Xml;
@@ -36,10 +31,10 @@ namespace Extensions.StringExtensions
         /// </summary>
         public static string ConvertTurkishToEnglish(this string str)
         {
-            var turkishChar = new char[] { 'ç', 'Ç', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'ü', 'Ü' };
-            var englishChar = new char[] { 'c', 'C', 'G', 'i', 'I', 'o', 'O', 's', 'S', 'u', 'U' };
+            var turkishChar = new[] { 'ç', 'Ç', 'Ğ', 'ı', 'İ', 'ö', 'Ö', 'ş', 'Ş', 'ü', 'Ü' };
+            var englishChar = new[] { 'c', 'C', 'G', 'i', 'I', 'o', 'O', 's', 'S', 'u', 'U' };
 
-            for (int i = 0; i < turkishChar.Length; i++)
+            for (var i = 0; i < turkishChar.Length; i++)
                 str = str.Replace(turkishChar[i], englishChar[i]);
             return str;
         }
@@ -74,7 +69,7 @@ namespace Extensions.StringExtensions
         /// <returns></returns>
         public static bool IsNullOrEmpty(this string str)
         {
-            return String.IsNullOrEmpty(str);
+            return string.IsNullOrEmpty(str);
         }
         /// <summary>
         /// n kadar string formata gore formatlayip dondurur
@@ -222,37 +217,6 @@ namespace Extensions.StringExtensions
         }
 
 
-        public static string SendSms(this string content, string phoneNumber, NetworkCredential networkCredential, out string smsID)
-        {
-            ServicePointManager.ServerCertificateValidationCallback = RemoteCertificateValidationCallback;
-            var client = new RestClient("https://lbtsds:8850/LBTSms/rest");
-            var request = new RestRequest("/SendSms", Method.POST)
-            {
-                RequestFormat = DataFormat.Json,
-                Credentials = networkCredential
-            };
-
-            var sms = new Sms(phoneNumber, content);
-            var sendSmsRequest = new SendSmsRequest(sms);
-            request.AddBody(sendSmsRequest);
-            var sendSmsResponse = client.Execute(request);
-            if (sendSmsResponse.StatusCode == HttpStatusCode.OK)
-            {
-                var p = JsonConvert.DeserializeObject<SendSmsResponse>(sendSmsResponse.Content);
-                var smsMessage = p.SmsResults.FirstOrDefault();
-                if (smsMessage != null && !string.IsNullOrEmpty(smsMessage.MessageId))
-                {
-                    smsID = smsMessage.MessageId;
-                    if (smsID == "-444")
-                        throw new Exception(Resources.StringExtensions_SendSms_Numaranız_Sms_Alımına_Kapalı_Detaylı_bilgi_için_operatorünüzle_görüşünüz___);
-                    if (smsID.Contains("-"))
-                        throw new Exception(Resources.StringExtensions_SendSms_Operatörde_sms_gonderimi_ile_ilgili_bir_sorun_olustu_Lütfen_daha_sonra_tekrar_deneyiniz___);
-                    return smsMessage.Result;
-                }
-            }
-            smsID = null;
-            return string.Empty;
-        }
 
 
         public static string GetCountryAndCityRequest(this string ipAdress)
@@ -275,11 +239,7 @@ namespace Extensions.StringExtensions
             }
         }
 
-        private static bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
-        {
-            return true;
-        }
-
+        
         public static string ConvertToText(this string html)
         {
             var xmlDoc = new XmlDocument();

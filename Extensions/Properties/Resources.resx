@@ -121,12 +121,6 @@
   <data name="css" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\css.text;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="StringExtensions_SendSms_Numaranız_Sms_Alımına_Kapalı_Detaylı_bilgi_için_operatorünüzle_görüşünüz___" xml:space="preserve">
-    <value>Numaranız Sms Alımına Kapalı.Detaylı bilgi için operatorünüzle görüşünüz...</value>
-  </data>
-  <data name="StringExtensions_SendSms_Operatörde_sms_gonderimi_ile_ilgili_bir_sorun_olustu_Lütfen_daha_sonra_tekrar_deneyiniz___" xml:space="preserve">
-    <value>Operatörde sms gonderimi ile ilgili bir sorun olustu.Lütfen daha sonra tekrar deneyiniz...</value>
-  </data>
   <data name="StringExtensions_GeoLocationUrl" xml:space="preserve">
     <value>http://api.ipinfodb.com/v3/ip-city/?key=84ff9ea6a5a542f9da2886b5cc2fe0f0bdfac8b624c6590bc1ad91223516cea0&amp;ip={0}</value>
   </data>
