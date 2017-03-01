@@ -34,6 +34,9 @@
       <HintPath>..\packages\Bogus.11.0.2\lib\net40\Bogus.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Extensions">
+      <HintPath>..\..\..\src\ExtensionMethods\Extensions\bin\Debug\Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -43,6 +46,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,9 +73,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapExtensionsTest.cs" />
+    <Compile Include="ConfigurationManagerExtensionTest.cs" />
+    <Compile Include="DateTimeExtensionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="TypeExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

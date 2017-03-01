@@ -1,4 +1,6 @@
-﻿namespace Extensions.DataTableExtensions
+﻿using Extensions.TypeExtensions;
+
+namespace Extensions.DataTableExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +14,7 @@
 
     public static class DataTableExtensions
     {
-        public static string ConvertDataTableToString(this DataTable dt)
+        public static string DataTableToString(this DataTable dt)
         {
             var stringBuilder = new StringBuilder();
             dt.Rows.Cast<DataRow>().ToList().ForEach(dataRow =>
@@ -29,7 +31,7 @@
             var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var prop in props)
             {
-                var t = GetCoreType(prop.PropertyType);
+                var t = prop.PropertyType.GetCoreType();
                 tb.Columns.Add(prop.Name, t);
             }
             foreach (var item in items)
@@ -46,36 +48,21 @@
             return tb;
         }
 
-        private static bool IsNullable(Type t)
-        {
-            return !t.IsValueType || (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
-        }
-
-        private static Type GetCoreType(Type t)
-        {
-            if (t == null || !IsNullable(t)) return t;
-            return !t.IsValueType ? t : Nullable.GetUnderlyingType(t);
-        }
-
-        public static DataTable ToDataTable(this IEnumerable<dynamic> items)
-        {
+        public static DataTable ToDataTable(this IEnumerable<dynamic> items) {
             var data = items.ToArray();
             if (!data.Any()) return null;
 
             var dt = new DataTable();
-            foreach (var key in ((IDictionary<string, object>)data[0]).Keys)
-            {
+            foreach (var key in ((IDictionary<string, object>)data[0]).Keys) {
                 dt.Columns.Add(key);
             }
-            foreach (var d in data)
-            {
+            foreach (var d in data) {
                 dt.Rows.Add(((IDictionary<string, object>)d).Values.ToArray());
             }
             return dt;
         }
 
-        public static Stream ToExcel(this DataTable dataTable, string sheetName = "Sheet1", TableStyles tableStyle= TableStyles.Medium28)
-        {
+        public static Stream ToExcel(this DataTable dataTable, string sheetName = "Sheet1", TableStyles tableStyle = TableStyles.Medium28) {
             var fs = new MemoryStream();
             var package = new ExcelPackage(fs);
             var sheet = package.Workbook.Worksheets.Add(sheetName);
@@ -85,5 +72,8 @@
             package.Save();
             return fs;
         }
+
+
+        
     }
 }

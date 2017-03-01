@@ -93,6 +93,7 @@
     <Compile Include="StreamExtensions\StreamExtensions.cs" />
     <Compile Include="StringExtensions\StringExtensions.cs" />
     <Compile Include="TableBuilder.cs" />
+    <Compile Include="TypeExtensions\TypeExtension.cs" />
     <Compile Include="XmlSerializerExtensions\XmlSerializerExtension.cs" />
   </ItemGroup>
   <ItemGroup>
