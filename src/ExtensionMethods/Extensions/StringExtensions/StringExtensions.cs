@@ -1,6 +1,4 @@
-﻿
-
-namespace Extensions.StringExtensions
+﻿namespace Extensions.StringExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -22,8 +20,8 @@ namespace Extensions.StringExtensions
 
         public static bool IsNumeric(this string value)
         {
-            float output;
-            return float.TryParse(value, out output);
+            decimal output;
+            return decimal.TryParse(value, out output);
         }
         /// <summary>
         /// Parametre olarak verilen ve türkçe karakterler içeren string ifadeyi İngilizce 
@@ -47,18 +45,7 @@ namespace Extensions.StringExtensions
         {
             return Regex.Match(str, regExPattern).Success;
         }
-        /// <summary>
-        ///  String ifadenin verilen RegEx ifadelerine uygun olup olmadini kontrol eder 
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="regExs"></param>
-        /// <returns></returns>
-        public static bool RegExControl(this string str, params string[] regExs)
-        {
-            var p = regExs.Select(regEx => Regex.IsMatch(str, regEx)).ToList();
-            var po = p.Where(w => w);
-            return po.Any();
-        }
+        
 
         /// <summary>
         /// string ifadenin null veya empty olup olmadigini kontrol eder
@@ -109,7 +96,7 @@ namespace Extensions.StringExtensions
             return string.Join(separator, array);
         }
 
-        public static string AppentSqlText(this string name)
+        public static string AppentJokerSqlText(this string name)
         {
             var strBldr = new StringBuilder();
             foreach (var item in name)
@@ -223,7 +210,6 @@ namespace Extensions.StringExtensions
             {
                 var requestUrl = string.Format(Resources.StringExtensions_GeoLocationUrl, ipAdress);
                 var webRequest = WebRequest.Create(requestUrl);
-                StreamReader geoStream;
                 using (var response = (HttpWebResponse)webRequest.GetResponse())
                 {
                     if (response.GetResponseStream() != null)
@@ -258,9 +244,7 @@ namespace Extensions.StringExtensions
 
         public static string CombineToPath(this string path, string root)
         {
-            if (Path.IsPathRooted(path)) return path;
-
-            return Path.Combine(root, path);
+            return Path.IsPathRooted(path) ? path : Path.Combine(root, path);
         }
 
         public static void IfNotNull(this string target, Action<string> continuation)
@@ -310,15 +294,10 @@ namespace Extensions.StringExtensions
 
         public static bool ToBool(this string stringValue)
         {
-            if (string.IsNullOrEmpty(stringValue)) return false;
-
-            return bool.Parse(stringValue);
+            return !string.IsNullOrEmpty(stringValue) && bool.Parse(stringValue);
         }
 
-        public static string ToFormat(this string stringFormat, params object[] args)
-        {
-            return String.Format(stringFormat, args);
-        }
+        
 
         /// <summary>
         /// Performs a case-insensitive comparison of strings
@@ -345,15 +324,7 @@ namespace Extensions.StringExtensions
             return new Regex("(\r\n|\n)").Replace(plainText, "<br/>");
         }
 
-        /// <summary>
-        /// Returns a DateTime value parsed from the <paramref name="dateTimeValue"/> parameter.
-        /// </summary>
-        /// <param name="dateTimeValue">A valid, parseable DateTime value</param>
-        /// <returns>The parsed DateTime value</returns>
-        public static DateTime ToDateTime(this string dateTimeValue)
-        {
-            return DateTime.Parse(dateTimeValue);
-        }
+        
 
         public static string ToGmtFormattedDate(this DateTime date)
         {
@@ -365,10 +336,10 @@ namespace Extensions.StringExtensions
             return content.ToDelimitedArray(',');
         }
 
-        public static string[] ToDelimitedArray(this string content, char delimiter)
+        private static string[] ToDelimitedArray(this string content, char delimiter)
         {
-            string[] array = content.Split(delimiter);
-            for (int i = 0; i < array.Length; i++)
+            var array = content.Split(delimiter);
+            for (var i = 0; i < array.Length; i++)
             {
                 array[i] = array[i].Trim();
             }
@@ -381,9 +352,9 @@ namespace Extensions.StringExtensions
             return IsValidNumber(number, Thread.CurrentThread.CurrentCulture);
         }
 
-        public static bool IsValidNumber(this string number, CultureInfo culture)
+        private static bool IsValidNumber(this string number, CultureInfo culture)
         {
-            string validNumberPattern =
+            var validNumberPattern =
             @"^-?(?:\d+|\d{1,3}(?:"
             + culture.NumberFormat.NumberGroupSeparator +
             @"\d{3})+)?(?:\"
@@ -463,7 +434,7 @@ namespace Extensions.StringExtensions
         public static TEnum ToEnum<TEnum>(this string text) where TEnum : struct
         {
             var enumType = typeof(TEnum);
-            if (!enumType.IsEnum) throw new ArgumentException("{0} is not an Enum".ToFormat(enumType.Name));
+            if (!enumType.IsEnum) throw new ArgumentException("{0} is not an Enum".FormatString(enumType.Name));
             return (TEnum)Enum.Parse(enumType, text, true);
         }
 
@@ -474,13 +445,13 @@ namespace Extensions.StringExtensions
         /// <returns></returns>
         public static string FileEscape(this string file)
         {
-            return "\"{0}\"".ToFormat(file);
+            return "\"{0}\"".FormatString(file);
         }
 
         public static string ToMoney(this string money)
         {
             decimal p;
-            return string.Format("{0:C}", Decimal.TryParse(money, out p) ? p : 0);
+            return FormatString("{0:C}", Decimal.TryParse(money, out p) ? p : 0);
         }
 
 
@@ -498,7 +469,7 @@ namespace Extensions.StringExtensions
             {
                 var p = XDocument.Parse(text);
             }
-            catch (XmlException e)
+            catch (XmlException)
             {
                 return false;
             }
