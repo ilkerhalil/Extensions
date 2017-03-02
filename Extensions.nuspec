@@ -1,11 +1,12 @@
-﻿<!--?xml version="1.0"?-->
-Extensions
-$version$
-Extensions
-İlker Halil Türer
-İlker Halil Türer
-https://github.com/ilkerhalil/Extensions
-false
-Say hello!
-Copyright 2017 İlker Halil Türer
-Extensions
+﻿    <?xml version="1.0" encoding="utf-8"?>
+    <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+      <metadata>
+        <id>Extensions</id>
+        <version>$version$</version>
+        <authors>İlker Halil Türer</authors>
+        <description>Another Extension Methods Library</description>
+        <language>en-US</language>
+        <projectUrl>https://github.com/ilkerhalil/Extensions</projectUrl>
+        <licenseUrl>https://github.com/ilkerhalil/Extensions</licenseUrl>
+      </metadata>
+    </package>
