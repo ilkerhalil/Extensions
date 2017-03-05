@@ -104,7 +104,7 @@ namespace Extensions.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://api.ipinfodb.com/v3/ip-city/?key=84ff9ea6a5a542f9da2886b5cc2fe0f0bdfac8b624c6590bc1ad91223516cea0&amp;ip={0}.
+        ///   Looks up a localized string similar to http://api.ipinfodb.com/v3/ip-city/?key=84ff9ea6a5a542f9da2886b5cc2fe0f0bdfac8b624c6590bc1ad91223516cea0&amp;ip={0}&amp;format=json.
         /// </summary>
         internal static string StringExtensions_GeoLocationUrl {
             get {
