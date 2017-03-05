@@ -122,7 +122,7 @@
     <value>..\Resources\css.text;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="StringExtensions_GeoLocationUrl" xml:space="preserve">
-    <value>http://api.ipinfodb.com/v3/ip-city/?key=84ff9ea6a5a542f9da2886b5cc2fe0f0bdfac8b624c6590bc1ad91223516cea0&amp;ip={0}</value>
+    <value>http://api.ipinfodb.com/v3/ip-city/?key=84ff9ea6a5a542f9da2886b5cc2fe0f0bdfac8b624c6590bc1ad91223516cea0&amp;ip={0}&amp;format=json</value>
   </data>
   <data name="StringExtensions_OneWayHash__Salt" xml:space="preserve">
     <value>3EsywndGe47Q</value>

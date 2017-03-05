@@ -1,4 +1,6 @@
 using System;
+using System.Xml.Serialization;
+using Extensions.IEnumerableExtensions;
 using Extensions.StringExtensions;
 using Shouldly;
 using Xunit;
@@ -50,6 +52,41 @@ namespace ExtensionMethods.Tests {
             nullableDate.ShouldBe(new DateTime(2016, 1, 1));
         }
 
+        [Fact]
+        public void IEnumerable_ToString_Test()
+        {
+            var ints = new []{1,3,5,7,9,11,13,15};
+            var result = ints.ToString("-");
+
+            result.ShouldBe("1-3-5-7-9-11-13-15");
+
+        }
+
+        [Fact]
+        public void AppendJokerSqlText_Test()
+        {
+            var searchParameter = "ürgüp göreme";
+            var result = searchParameter.AppendJokerSqlText();
+
+            result.ShouldBe("[uüUÜ]r[gGðÐ][uüUÜ]p% [gGðÐ][oöOÖ]reme");
+        }
+
+        [Fact]
+        public void GetRandomText_Test()
+        {
+            var result = "My second home with my big bro".GetRandomText(10, false);
+            string.IsNullOrWhiteSpace(result).ShouldBe(false);
+
+            result.Length.ShouldBe(10);
+        }
+
+        [Fact]
+        public void GetCountryAndCityRequest_Test()
+        {
+            var countryAndCityRequest = "88.232.220.78".GetCountryAndCityRequest();
+            countryAndCityRequest.ShouldNotBeNull();
+            countryAndCityRequest.Status.ShouldBe("OK");
+        }
 
     }
 }

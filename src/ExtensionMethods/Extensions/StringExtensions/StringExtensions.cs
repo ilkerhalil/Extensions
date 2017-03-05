@@ -1,4 +1,7 @@
-﻿namespace Extensions.StringExtensions
+﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
+
+namespace Extensions.StringExtensions
 {
     using System;
     using System.Collections.Generic;
@@ -96,7 +99,7 @@
             return string.Join(separator, array);
         }
 
-        public static string AppentJokerSqlText(this string name)
+        public static string AppendJokerSqlText(this string name)
         {
             var strBldr = new StringBuilder();
             foreach (var item in name)
@@ -201,10 +204,7 @@
             return stringBuilder.ToString();
         }
 
-
-
-
-        public static string GetCountryAndCityRequest(this string ipAdress)
+        public static GetCountryAndCityResponse GetCountryAndCityRequest(this string ipAdress)
         {
             try
             {
@@ -213,17 +213,26 @@
                 using (var response = (HttpWebResponse)webRequest.GetResponse())
                 {
                     if (response.GetResponseStream() != null)
-                        return new StreamReader(response.GetResponseStream()).ReadToEnd();
+                    {
+                        var result = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                        return ParseGetCountryAndCityResult(result);
+                    }
                 }
-                return string.Empty;
+                return null;
             }
             catch
             {
-                return string.Empty;
+                return null;
             }
         }
 
-        
+        private static GetCountryAndCityResponse ParseGetCountryAndCityResult(string result)
+        {
+            var dataContractJsonSerializer = new DataContractJsonSerializer(typeof(GetCountryAndCityResponse));
+            var memoryStream =  new MemoryStream(Encoding.Default.GetBytes(result));
+            return dataContractJsonSerializer.ReadObject(memoryStream) as GetCountryAndCityResponse;
+        }
+
         public static string ConvertToText(this string html)
         {
             var xmlDoc = new XmlDocument();
@@ -478,6 +487,48 @@
         }
 
 
+    }
+    [DataContract]
+    public class GetCountryAndCityResponse {
+
+ //       "statusCode" : "OK",
+	//"statusMessage" : "",
+	//"ipAddress" : "74.125.45.100",
+	//"countryCode" : "US",
+	//"countryName" : "UNITED STATES",
+	//"regionName" : "CALIFORNIA",
+	//"cityName" : "MOUNTAIN VIEW",
+	//"zipCode" : "94043",
+	//"latitude" : "37.3956",
+	//"longitude" : "-122.076",
+	//"timeZone" : "-08:00"
+        [DataMember(Name = "statusCode")]
+        public string Status { get; set; }
+        [DataMember(Name = "statusMessage")]
+        public string StatusMessage { get; set; }
+        [DataMember(Name = "ipAddress")]
+        public string IpAddress { get; set; }
+        [DataMember(Name = "countryCode")]
+        public string CountryCode { get; set; }
+        [DataMember(Name = "countryName")]
+        public string CountryName { get; set; }
+        [DataMember(Name = "regionName")]
+        public string RegionName { get; set; }
+        [DataMember(Name = "cityName")]
+        public string CityName { get; set; }
+        [DataMember(Name = "zipCode")]
+        public string ZipCode { get; set; }
+        [DataMember(Name = "latitude")]
+        public string Latitude { get; set; }
+        [DataMember(Name = "longitude")]
+        public string Longitude { get; set; }
+        [DataMember(Name = "timeZone")]
+        public string TimeZone { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Status)}: {Status}, {nameof(StatusMessage)}: {StatusMessage}, {nameof(IpAddress)}: {IpAddress}, {nameof(CountryCode)}: {CountryCode}, {nameof(CountryName)}: {CountryName}, {nameof(RegionName)}: {RegionName}, {nameof(CityName)}: {CityName}, {nameof(ZipCode)}: {ZipCode}, {nameof(Latitude)}: {Latitude}, {nameof(Longitude)}: {Longitude}, {nameof(TimeZone)}: {TimeZone}";
+        }
     }
 
 
