@@ -133,7 +133,7 @@
     <MSBuildProjectRootDirectory>$([System.IO.Path]::Combine($(MSBuildProjectDirectory),'..\..\..\'))</MSBuildProjectRootDirectory>
   </PropertyGroup>
   <UsingTask AssemblyFile="xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit" />
-  <Target Name="Build">
+  <Target Name="AfterBuild">
     <xunit Assemblies="$(MSBuildProjectRootDirectory)\test\ExtensionMethods.Tests\ExtensionMethods.Tests\bin\Debug\ExtensionMethods.Tests.dll" />
   </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
