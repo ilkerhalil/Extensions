@@ -9,7 +9,6 @@ namespace Extensions.IEnumerableExtensions
     using System.IO;
     using System.Linq;
     using System.Text;
-    using ClosedXML.Excel;
     using ObjectExtensions;
     using Properties;
 
@@ -18,7 +17,7 @@ namespace Extensions.IEnumerableExtensions
 
     public static class IEnumerableExtensions
     {
-        
+
 
 
         public static Stream ToExcel(this IEnumerable<dynamic> collection, string sheetName = "Sheet1")
@@ -28,18 +27,23 @@ namespace Extensions.IEnumerableExtensions
 
         public static void ToExcel<T>(this IEnumerable<T> collection, string savePath)
         {
-            var dataTble = collection.ToDataTable();
-            var wb = new XLWorkbook();
-            wb.Worksheets.Add(dataTble);
-            wb.SaveAs(savePath);
+
+            using (var fs = new FileStream(savePath, FileMode.OpenOrCreate))
+            {
+                var package = new ExcelPackage(fs);
+                var sheet = package.Workbook.Worksheets.Add("Sheet 1");
+                sheet.Cells.LoadFromCollection(collection, true);
+                package.Save();
+            }
+
         }
 
-        public static Stream ToExcel<T>(this IEnumerable<T> collection,string sheetName = "Sheet1", TableStyles tableStyle= TableStyles.Dark1)
+        public static Stream ToExcel<T>(this IEnumerable<T> collection, string sheetName = "Sheet1", TableStyles tableStyle = TableStyles.Dark1)
         {
             if (!Enum.IsDefined(typeof(TableStyles), tableStyle))
-                throw new InvalidEnumArgumentException(nameof(tableStyle), (int) tableStyle, typeof(TableStyles));
+                throw new InvalidEnumArgumentException(nameof(tableStyle), (int)tableStyle, typeof(TableStyles));
             if (!Enum.IsDefined(typeof(TableStyles), tableStyle))
-                throw new InvalidEnumArgumentException(nameof(tableStyle), (int) tableStyle, typeof(TableStyles));
+                throw new InvalidEnumArgumentException(nameof(tableStyle), (int)tableStyle, typeof(TableStyles));
             var fs = new MemoryStream();
             var package = new ExcelPackage(fs);
             var sheet = package.Workbook.Worksheets.Add(sheetName);
@@ -78,7 +82,6 @@ namespace Extensions.IEnumerableExtensions
             sr.AppendLine("<tbody>");
             foreach (var item in collection)
             {
-                const int rowNumber = 0;
                 sr.AppendLine($"<tr class=\"{("R1")}\">");
                 var properties = item.GetType().GetProperties();
                 foreach (var property in properties)
@@ -142,7 +145,7 @@ namespace Extensions.IEnumerableExtensions
 
                 sr.AppendLine("<tr id='header'>");
                 sr.AppendLine($"<td>{item.Name}</td>");
-                array.ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
+                array.ToList().ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
                     .ForEach(f =>
                      {
                          var value = f.GetValue(ar, null) ?? string.Empty;
@@ -232,7 +235,7 @@ namespace Extensions.IEnumerableExtensions
                 iRowOdd = iRowOdd + 1;
                 sr.AppendLine($"<tr id=\"R{((iRowOdd % 2 == 0) ? "0" : "1")} \">");
                 sr.AppendLine($"<td><span>{item.Name}</span></td>");
-                array.Take(2).ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
+                array.Take(2).ToList().ForEach(ar => ar.GetType().GetProperties().Where(w => w.Name == item.Name).ToList()
                     .ForEach(f =>
                     {
                         var value = f.GetValue(ar, null) ?? string.Empty;
