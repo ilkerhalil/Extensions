@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{0D629986-071E-4B22-BF76-B70D18F9FDD6}"
+ProjectSection(SolutionItems) = preProject
+    .nuget\NuGet.Config = .nuget\NuGet.Config
+    .nuget\NuGet.exe = .nuget\NuGet.exe
+    .nuget\NuGet.targets = .nuget\NuGet.targets
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
