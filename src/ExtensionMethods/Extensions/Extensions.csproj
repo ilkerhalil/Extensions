@@ -71,9 +71,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit.runner.msbuild">
-      <HintPath>..\packages\xunit.runner.msbuild.2.2.0\build\net452\xunit.runner.msbuild.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapExtensions\BitmapExtensions.cs" />
