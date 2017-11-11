@@ -1,29 +1,33 @@
 using System;
-using System.Xml.Serialization;
-using Extensions.IEnumerableExtensions;
 using Extensions.StringExtensions;
 using Shouldly;
-using Xunit;
+using NUnit.Framework;
 
-namespace ExtensionMethods.Tests {
-    public class StringExtensionTest {
+namespace ExtensionMethods.Tests
+{
+    [TestFixture]
+    public class StringExtensionTest
+    {
 
-        [Fact]
-        public void IsNumeric_Test() {
+        [Test]
+        public void IsNumeric_Test()
+        {
             var number = "0.70";
             var result = number.IsNumeric();
             result.ShouldBe(true);
         }
 
-        [Fact]
-        public void ConvertTurkishToEnglish_Test() {
+        [Test]
+        public void ConvertTurkishToEnglish_Test()
+        {
             var sampleTest = "Ýlker Halil Türer";
             var result = sampleTest.ConvertTurkishToEnglish();
             result.ShouldBe("Ilker Halil Turer");
         }
 
-        [Fact]
-        public void RegExControl_Test() {
+        [Test]
+        public void RegExControl_Test()
+        {
             var sampleRegEx = "(.*)(\\d+)(.*)";
             var line = "This order was placed for QT3000!OK ? ";
             var result = line.RegExControl(sampleRegEx);
@@ -31,38 +35,41 @@ namespace ExtensionMethods.Tests {
 
         }
 
-        [Fact]
-        public void IsNullOrEmpty_Test() {
+        [Test]
+        public void IsNullOrEmpty_Test()
+        {
             var empty = string.Empty;
             var result = empty.IsNullOrEmpty();
             result.ShouldBe(true);
         }
 
-        [Fact]
-        public void FormatString_Test() {
+        [Test]
+        public void FormatString_Test()
+        {
             var format = "{0}-{1}-{2}";
             var result = format.FormatString(1, 2, 3);
             result.ShouldBe("1-2-3");
         }
 
-        [Fact]
-        public void ToNullableDate_Test() {
+        [Test]
+        public void ToNullableDate_Test()
+        {
             var exampleDate = "01.01.2016";
             var nullableDate = exampleDate.ToNullableDate();
             nullableDate.ShouldBe(new DateTime(2016, 1, 1));
         }
 
-        [Fact]
+        [Test]
         public void IEnumerable_ToString_Test()
         {
-            var ints = new []{1,3,5,7,9,11,13,15};
+            var ints = new[] { 1, 3, 5, 7, 9, 11, 13, 15 };
             var result = ints.ToString("-");
 
             result.ShouldBe("1-3-5-7-9-11-13-15");
 
         }
 
-        [Fact]
+        [Test]
         public void AppendJokerSqlText_Test()
         {
             var searchParameter = "ürgüp göreme";
@@ -71,7 +78,7 @@ namespace ExtensionMethods.Tests {
             result.ShouldBe("[uüUÜ]r[gGðÐ][uüUÜ]p% [gGðÐ][oöOÖ]reme");
         }
 
-        [Fact]
+        [Test]
         public void GetRandomText_Test()
         {
             var result = "My second home with my big bro".GetRandomText(10, false);
@@ -80,7 +87,7 @@ namespace ExtensionMethods.Tests {
             result.Length.ShouldBe(10);
         }
 
-        [Fact]
+        [Test]
         public void GetCountryAndCityRequest_Test()
         {
             var countryAndCityRequest = "88.232.220.78".GetCountryAndCityRequest();

@@ -1,21 +1,26 @@
 using System;
 using Extensions.DateTimeExtensions;
 using Shouldly;
-using Xunit;
+using NUnit.Framework;
 
-namespace ExtensionMethods.Tests {
-    public class DateTimeExtensionTest {
+namespace ExtensionMethods.Tests
+{
+    [TestFixture]
+    public class DateTimeExtensionTest
+    {
 
-        [Fact]
-        public void Between_True_Test() {
+        [Test]
+        public void Between_True_Test()
+        {
 
             var dateTime = new DateTime(2013, 1, 1);
             var result = dateTime.Between(new DateTime(2010, 1, 1), DateTime.Now);
             //assert
             result.ShouldBe(true);
         }
-        [Fact]
-        public void Between_False_Test() {
+        [Test]
+        public void Between_False_Test()
+        {
 
             var dateTime = new DateTime(2019, 1, 1);
             var result = dateTime.Between(new DateTime(2010, 1, 1), DateTime.Now);
@@ -23,10 +28,10 @@ namespace ExtensionMethods.Tests {
             result.ShouldBe(false);
         }
 
-        [Fact]
+        [Test]
         public void StartOfWeek_Test()
         {
-            var dateTime = new DateTime(2017,3,1);
+            var dateTime = new DateTime(2017, 3, 1);
             var startOfWeek = dateTime.StartOfWeek(DayOfWeek.Monday);
             startOfWeek.ShouldBe(new DateTime(2017, 2, 27));
         }

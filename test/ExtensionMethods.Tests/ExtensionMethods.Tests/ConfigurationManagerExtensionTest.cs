@@ -1,13 +1,14 @@
 ﻿using System.Configuration;
 using Extensions.ConfigurationManager;
 using Shouldly;
-using Xunit;
+using NUnit.Framework;
 
 namespace ExtensionMethods.Tests
 {
+    [TestFixture]
     public class ConfigurationManagerExtensionTest {
 
-        [Fact]
+        [Test]
         public void GetSection_Test()
         {
             
