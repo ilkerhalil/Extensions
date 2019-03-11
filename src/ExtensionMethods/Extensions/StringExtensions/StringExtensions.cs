@@ -243,7 +243,7 @@ namespace Extensions.StringExtensions
 #pragma warning disable 618
             var xslt = new XslTransform();
 #pragma warning restore 618
-            xslt.Load(xsl, null, null);
+            xslt.Load(xsl);
             var writer = new StringWriter();
             xslt.Transform(xmlDoc, null, writer, null);
             var text = writer.ToString();
