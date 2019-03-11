@@ -61,7 +61,7 @@
                                 alphanumeric and start with character.");
                 }
             }
-            objectType = tb.CreateType();
+            objectType = tb.CreateTypeInfo();
 
             TypeBySigniture.Add(typeSigniture, objectType);
 
@@ -131,7 +131,7 @@
         private static TypeBuilder GetTypeBuilder(string typeSigniture) {
             var an = new AssemblyName("TempAssembly" + typeSigniture);
             var assemblyBuilder =
-                AppDomain.CurrentDomain.DefineDynamicAssembly(
+                AssemblyBuilder.DefineDynamicAssembly(
                     an, AssemblyBuilderAccess.Run);
             var moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
 
