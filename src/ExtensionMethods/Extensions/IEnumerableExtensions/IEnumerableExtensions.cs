@@ -18,8 +18,6 @@ namespace Extensions.IEnumerableExtensions
     public static class IEnumerableExtensions
     {
 
-
-
         public static Stream ToExcel(this IEnumerable<dynamic> collection, string sheetName = "Sheet1")
         {
             return collection.ToDataTable().ToExcel(sheetName);

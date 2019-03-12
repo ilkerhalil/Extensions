@@ -2,6 +2,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>true</IsPackable>
+    <PackageId>Extensions</PackageId>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Another Extension Method Library</Description>
+    <Authors>Ilker Halil Turer</Authors>
+    <AssemblyName>Extensions</AssemblyName>
+    <PackageTags>Extension Methods;Excel To Datatable;IEnumerable Extensions</PackageTags>
+    <PackageProjectUrl>https://github.com/ilkerhalil/Extensions</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>https://github.com/ilkerhalil/Extensions/releases</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml.DotNet.Core" Version="1.0.1" />
