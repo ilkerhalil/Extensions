@@ -1,4 +1,3 @@
-
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,6 +34,17 @@ Task ("Build")
    .Does (() => {
       foreach (var path in solutionPaths) {
          DotNetCoreBuild (path.FullPath);
+      }
+   });
+Task ("Run-Unit-Tests")
+   .Does (() => {
+      var projects = GetFiles ("./test/**/*.csproj");
+      var settings = new DotNetCoreTestSettings {
+         Configuration = configuration,
+         NoBuild = true
+      };
+      foreach (var project in projects) {
+         DotNetCoreTest (project.FullPath, settings);
       }
    });
 
