@@ -16,7 +16,7 @@
     <PackageReference Include="DocumentFormat.OpenXml.DotNet.Core" Version="1.0.1" />
     <PackageReference Include="EPPlus" Version="4.5.3.1" />
     <PackageReference Include="PoorMansTSQLFormatter" Version="1.4.3.1" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
 </Project>
