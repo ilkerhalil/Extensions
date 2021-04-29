@@ -1,0 +1,21 @@
+version: 2
+updates:
+- package-ecosystem: nuget
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: EPPlus
+    versions:
+    - 5.5.3
+    - 5.5.4
+    - 5.5.5
+    - 5.6.0
+    - 5.6.1
+    - 5.6.2
+  - dependency-name: Nerdbank.GitVersioning
+    versions:
+    - 3.3.37
+    - 3.4.190
